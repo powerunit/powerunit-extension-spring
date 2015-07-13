@@ -1,0 +1,12 @@
+language: java
+jdk:
+- oraclejdk8
+sudo: false
+before_install: git clone -b travis `git config --get remote.origin.url` target/travis
+script:
+- "[ ${TRAVIS_PULL_REQUEST} = 'false' -a ${TRAVIS_BRANCH} = 'master' ] && (cd powerunit-extensions-spring
+  && mvn clean install site -Psite --settings ../target/travis/settings.xml) || (cd
+  powerunit-extensions-spring && mvn clean install --settings ../target/travis/settings.xml) "
+env:
+  global:
+    secure: Oo5VXVBp+HyefaStQjxiezNfd4Ie3dwaCIYhjo/wga6/QiJgmY4pOCcg9SIVlBOSC4T3xbF9HxgULFJRRSETGYFe+G01okFe3B5ulgfgYmeegBcDm7XIKdNvB3/qQ6U9TSuiAcyFUzP+cx9ola9ZwQleu7ixA3PDX8f9nnZ7WfPXT+HoR44n/zYzxAa3UPEKKavVllhNAsjv8Gqo0smXu3uSaoO0zTXwprXVPMfi+gjaBca0fYkxNXJb/v1J7k11AZK9gz/hZmdvrHTyqRq1WLUg9hKP8iguaDljcf5+J1BYCb1AOBXwltQJs8VTeUxl2PqHXuUteg0HRf2sIZUDuIRUu3ML6xYSlGeM7pROVIJWF9vMpyPJNSoFS3mEvYL/gt38iLvbxCk0SkCCw8EKDDrTOfCPOBaB65IBDhpVz5IMQXp9xL0bIizXgEqXz9bmeo90SsxyT8F+vLFfmtHxg/kUi2+qcp5XseugGGreVZsAB5FO7XJz0awzYXRECY+IgwVkwLlt+3NokevvX+n/4cSAkeAivokBoKlXW+pxwMn3TPu5oXpTkeOZQ42zfInTg23U0JfsL4V4mW9vYANzpFqI7YhhkI+Q8x7DeRgkm0LvAYgy78LUtS1/YzB0oP3I1FzzfLLOseS8NIrKb+vZihuo4n31503DyUoLpYakdvw=
