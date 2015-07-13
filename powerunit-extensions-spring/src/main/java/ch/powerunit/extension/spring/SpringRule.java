@@ -19,6 +19,7 @@
  */
 package ch.powerunit.extension.spring;
 
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 
 import ch.powerunit.extension.spring.impl.SpringRuleImpl;
@@ -33,18 +34,6 @@ import ch.powerunit.rules.TestListenerRule;
  */
 public interface SpringRule extends TestListenerRule {
 	ApplicationContext getApplicationContext();
-
-	/**
-	 * Get a bean from the used ApplicationContext.
-	 * 
-	 * @param requiredType
-	 *            the requiredType.
-	 * @return the bean
-	 * @see org.springframework.context.ApplicationContext#getBean(Class)
-	 * @param <T>
-	 *            THe type of the bean.
-	 */
-	<T> T getBean(Class<T> requiredType);
 
 	/**
 	 * Create a rule to support Spring.
@@ -73,6 +62,64 @@ public interface SpringRule extends TestListenerRule {
 		tmp[0] = location;
 		System.arraycopy(nextLocation, 0, tmp, 1, nextLocation.length);
 		return new SpringRuleImpl(tmp, autowireMode);
+	}
+
+	/**
+	 * Get a bean from the used ApplicationContext.
+	 * 
+	 * @param requiredType
+	 *            the requiredType.
+	 * @return the bean
+	 * @see org.springframework.context.ApplicationContext#getBean(Class)
+	 * @param <T>
+	 *            THe type of the bean.
+	 */
+	default <T> T getBean(Class<T> requiredType) {
+		return getApplicationContext().getBean(requiredType);
+	}
+
+	/**
+	 * Validate if a bean with a name exists.
+	 * 
+	 * @param name
+	 *            the name
+	 * @return true if the bean exists.
+	 * @see org.springframework.context.ApplicationContext#containsBean(String)
+	 */
+	default boolean containsBean(String name) {
+		return getApplicationContext().containsBean(name);
+	}
+
+	/**
+	 * Get a bean, passing argument.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param arguments
+	 *            the arguments
+	 * @return the bean
+	 * @throws BeansException
+	 *             if the bean could not be created
+	 * @see org.springframework.context.ApplicationContext#getBean(Class,
+	 *      Object...)
+	 */
+	default Object getBean(String name, Object... arguments)
+			throws BeansException {
+		return getApplicationContext().getBean(name, arguments);
+	}
+
+	/**
+	 * Get a bean, by name.
+	 * 
+	 * @param name
+	 *            the name
+	 * @return the bean
+	 * @throws BeansException
+	 *             if the bean could not be created
+	 * @see org.springframework.context.ApplicationContext#getBean(String)
+	 */
+	default Object getBean(String name) throws BeansException {
+		return getApplicationContext().getBean(name);
 	}
 
 }

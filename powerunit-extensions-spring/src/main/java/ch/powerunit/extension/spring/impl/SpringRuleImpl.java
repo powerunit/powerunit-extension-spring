@@ -19,6 +19,7 @@
  */
 package ch.powerunit.extension.spring.impl;
 
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -52,6 +53,7 @@ public final class SpringRuleImpl implements SpringRule {
 	 * @see
 	 * ch.powerunit.rules.TestListenerRule#onStart(ch.powerunit.TestContext)
 	 */
+	@Override
 	public void onStart(TestContext<Object> context) {
 		springContext = new ClassPathXmlApplicationContext(location);
 		springContext.refresh();
@@ -64,8 +66,9 @@ public final class SpringRuleImpl implements SpringRule {
 	 * 
 	 * @see ch.powerunit.rules.TestListenerRule#onEnd(ch.powerunit.TestContext)
 	 */
+	@Override
 	public void onEnd(TestContext<Object> context) {
-		if (springContext != null) {
+		if (springContext != null && springContext.isActive()) {
 			springContext.close();
 		}
 	}
@@ -75,16 +78,8 @@ public final class SpringRuleImpl implements SpringRule {
 	 * 
 	 * @see ch.powerunit.extension.spring.SpringRule#getApplicationContext()
 	 */
+	@Override
 	public ApplicationContext getApplicationContext() {
 		return springContext;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ch.powerunit.extension.spring.SpringRule#getBean(java.lang.Class)
-	 */
-	public <T> T getBean(Class<T> requiredType) {
-		return springContext.getBean(requiredType);
 	}
 }
