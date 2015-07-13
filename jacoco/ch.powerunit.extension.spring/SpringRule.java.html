@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>SpringRule.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Powerunit - Java Testing framework for JDK 1.8 - Extension to support integration with spring.</a> &gt; <a href="index.source.html" class="el_package">ch.powerunit.extension.spring</a> &gt; <span class="el_source">SpringRule.java</span></div><h1>SpringRule.java</h1><pre class="source lang-java linenums">/**
+ * Powerunit - A JDK1.8 test framework
+ * Copyright (C) 2014 Mathieu Boretti.
+ *
+ * This file is part of Powerunit
+ *
+ * Powerunit is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Powerunit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Powerunit. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package ch.powerunit.extension.spring;
+
+import org.springframework.context.ApplicationContext;
+
+import ch.powerunit.extension.spring.impl.SpringRuleImpl;
+import ch.powerunit.rules.TestListenerRule;
+
+/**
+ * This is a {@link ch.powerunit.TestRule TestRule} to provide support to use
+ * Spring inside PowerUnit.
+ * 
+ * @author borettim
+ *
+ */
+public interface SpringRule extends TestListenerRule {
+	ApplicationContext getApplicationContext();
+
+	/**
+	 * Get a bean from the used ApplicationContext.
+	 * 
+	 * @param requiredType
+	 *            the requiredType.
+	 * @return the bean
+	 * @see org.springframework.context.ApplicationContext#getBean(Class)
+	 * @param &lt;T&gt;
+	 *            THe type of the bean.
+	 */
+	&lt;T&gt; T getBean(Class&lt;T&gt; requiredType);
+
+	/**
+	 * Create a rule to support Spring.
+	 * &lt;p&gt;
+	 * For instance:
+	 * 
+	 * &lt;pre&gt;
+	 * &amp;#064;Rule
+	 * public final SpringRule spring = SpringRule.of(
+	 * 		AutowireCapableBeanFactory.AUTOWIRE_BY_NAME, &amp;quot;classpath:sample.xml&amp;quot;);
+	 * &lt;/pre&gt;
+	 * 
+	 * @param autowireMode
+	 *            The autowiring mode (of the test class).
+	 * @param location
+	 *            the first location for the bean context.
+	 * @param nextLocation
+	 *            optional additional location for the bean context.
+	 * @return the Rule.
+	 * @see org.springframework.beans.factory.config.AutowireCapableBeanFactory#AUTOWIRE_BY_NAME
+	 * @see org.springframework.beans.factory.config.AutowireCapableBeanFactory#AUTOWIRE_BY_TYPE
+	 */
+	static SpringRule of(int autowireMode, String location,
+			String... nextLocation) {
+<span class="fc" id="L72">		String[] tmp = new String[nextLocation.length + 1];</span>
+<span class="fc" id="L73">		tmp[0] = location;</span>
+<span class="fc" id="L74">		System.arraycopy(nextLocation, 0, tmp, 1, nextLocation.length);</span>
+<span class="fc" id="L75">		return new SpringRuleImpl(tmp, autowireMode);</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
