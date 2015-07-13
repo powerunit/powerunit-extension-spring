@@ -19,6 +19,7 @@
  */
 package ch.powerunit.extension.spring;
 
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 
 import ch.powerunit.extension.spring.impl.SpringRuleImpl;
@@ -33,18 +34,6 @@ import ch.powerunit.rules.TestListenerRule;
  */
 public interface SpringRule extends TestListenerRule {
 	ApplicationContext getApplicationContext();
-
-	/**
-	 * Get a bean from the used ApplicationContext.
-	 * 
-	 * @param requiredType
-	 *            the requiredType.
-	 * @return the bean
-	 * @see org.springframework.context.ApplicationContext#getBean(Class)
-	 * @param &lt;T&gt;
-	 *            THe type of the bean.
-	 */
-	&lt;T&gt; T getBean(Class&lt;T&gt; requiredType);
 
 	/**
 	 * Create a rule to support Spring.
@@ -69,10 +58,68 @@ public interface SpringRule extends TestListenerRule {
 	 */
 	static SpringRule of(int autowireMode, String location,
 			String... nextLocation) {
-<span class="fc" id="L72">		String[] tmp = new String[nextLocation.length + 1];</span>
-<span class="fc" id="L73">		tmp[0] = location;</span>
-<span class="fc" id="L74">		System.arraycopy(nextLocation, 0, tmp, 1, nextLocation.length);</span>
-<span class="fc" id="L75">		return new SpringRuleImpl(tmp, autowireMode);</span>
+<span class="fc" id="L61">		String[] tmp = new String[nextLocation.length + 1];</span>
+<span class="fc" id="L62">		tmp[0] = location;</span>
+<span class="fc" id="L63">		System.arraycopy(nextLocation, 0, tmp, 1, nextLocation.length);</span>
+<span class="fc" id="L64">		return new SpringRuleImpl(tmp, autowireMode);</span>
+	}
+
+	/**
+	 * Get a bean from the used ApplicationContext.
+	 * 
+	 * @param requiredType
+	 *            the requiredType.
+	 * @return the bean
+	 * @see org.springframework.context.ApplicationContext#getBean(Class)
+	 * @param &lt;T&gt;
+	 *            THe type of the bean.
+	 */
+	default &lt;T&gt; T getBean(Class&lt;T&gt; requiredType) {
+<span class="fc" id="L78">		return getApplicationContext().getBean(requiredType);</span>
+	}
+
+	/**
+	 * Validate if a bean with a name exists.
+	 * 
+	 * @param name
+	 *            the name
+	 * @return true if the bean exists.
+	 * @see org.springframework.context.ApplicationContext#containsBean(String)
+	 */
+	default boolean containsBean(String name) {
+<span class="nc" id="L90">		return getApplicationContext().containsBean(name);</span>
+	}
+
+	/**
+	 * Get a bean, passing argument.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param arguments
+	 *            the arguments
+	 * @return the bean
+	 * @throws BeansException
+	 *             if the bean could not be created
+	 * @see org.springframework.context.ApplicationContext#getBean(Class,
+	 *      Object...)
+	 */
+	default Object getBean(String name, Object... arguments)
+			throws BeansException {
+<span class="nc" id="L108">		return getApplicationContext().getBean(name, arguments);</span>
+	}
+
+	/**
+	 * Get a bean, by name.
+	 * 
+	 * @param name
+	 *            the name
+	 * @return the bean
+	 * @throws BeansException
+	 *             if the bean could not be created
+	 * @see org.springframework.context.ApplicationContext#getBean(String)
+	 */
+	default Object getBean(String name) throws BeansException {
+<span class="nc" id="L122">		return getApplicationContext().getBean(name);</span>
 	}
 
 }

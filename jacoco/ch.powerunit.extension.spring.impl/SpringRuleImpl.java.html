@@ -19,6 +19,7 @@
  */
 package ch.powerunit.extension.spring.impl;
 
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -41,10 +42,10 @@ public final class SpringRuleImpl implements SpringRule {
 	 * @param location
 	 * @param autowireMode
 	 */
-<span class="fc" id="L44">	public SpringRuleImpl(String[] location, int autowireMode) {</span>
-<span class="fc" id="L45">		this.location = location;</span>
-<span class="fc" id="L46">		this.autowireMode = autowireMode;</span>
-<span class="fc" id="L47">	}</span>
+<span class="fc" id="L45">	public SpringRuleImpl(String[] location, int autowireMode) {</span>
+<span class="fc" id="L46">		this.location = location;</span>
+<span class="fc" id="L47">		this.autowireMode = autowireMode;</span>
+<span class="fc" id="L48">	}</span>
 
 	/*
 	 * (non-Javadoc)
@@ -52,40 +53,34 @@ public final class SpringRuleImpl implements SpringRule {
 	 * @see
 	 * ch.powerunit.rules.TestListenerRule#onStart(ch.powerunit.TestContext)
 	 */
+	@Override
 	public void onStart(TestContext&lt;Object&gt; context) {
-<span class="fc" id="L56">		springContext = new ClassPathXmlApplicationContext(location);</span>
-<span class="fc" id="L57">		springContext.refresh();</span>
-<span class="fc" id="L58">		springContext.getAutowireCapableBeanFactory().autowireBeanProperties(</span>
-<span class="fc" id="L59">				context.getTestSuiteObject(), autowireMode, true);</span>
-<span class="fc" id="L60">	}</span>
+<span class="fc" id="L58">		springContext = new ClassPathXmlApplicationContext(location);</span>
+<span class="fc" id="L59">		springContext.refresh();</span>
+<span class="fc" id="L60">		springContext.getAutowireCapableBeanFactory().autowireBeanProperties(</span>
+<span class="fc" id="L61">				context.getTestSuiteObject(), autowireMode, true);</span>
+<span class="fc" id="L62">	}</span>
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see ch.powerunit.rules.TestListenerRule#onEnd(ch.powerunit.TestContext)
 	 */
+	@Override
 	public void onEnd(TestContext&lt;Object&gt; context) {
-<span class="pc bpc" id="L68" title="1 of 2 branches missed.">		if (springContext != null) {</span>
-<span class="fc" id="L69">			springContext.close();</span>
+<span class="pc bpc" id="L71" title="2 of 4 branches missed.">		if (springContext != null &amp;&amp; springContext.isActive()) {</span>
+<span class="fc" id="L72">			springContext.close();</span>
 		}
-<span class="fc" id="L71">	}</span>
+<span class="fc" id="L74">	}</span>
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see ch.powerunit.extension.spring.SpringRule#getApplicationContext()
 	 */
+	@Override
 	public ApplicationContext getApplicationContext() {
-<span class="nc" id="L79">		return springContext;</span>
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ch.powerunit.extension.spring.SpringRule#getBean(java.lang.Class)
-	 */
-	public &lt;T&gt; T getBean(Class&lt;T&gt; requiredType) {
-<span class="fc" id="L88">		return springContext.getBean(requiredType);</span>
+<span class="fc" id="L83">		return springContext;</span>
 	}
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
