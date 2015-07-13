@@ -25,6 +25,9 @@ import ch.powerunit.extension.spring.impl.SpringRuleImpl;
 import ch.powerunit.rules.TestListenerRule;
 
 /**
+ * This is a {@link ch.powerunit.TestRule TestRule} to provide support to use
+ * Spring inside PowerUnit.
+ * 
  * @author borettim
  *
  */
@@ -32,22 +35,44 @@ public interface SpringRule extends TestListenerRule {
 	ApplicationContext getApplicationContext();
 
 	/**
+	 * Get a bean from the used ApplicationContext.
+	 * 
 	 * @param requiredType
-	 * @return
+	 *            the requiredType.
+	 * @return the bean
+	 * @see org.springframework.context.ApplicationContext#getBean(Class)
+	 * @param <T>
+	 *            THe type of the bean.
 	 */
 	<T> T getBean(Class<T> requiredType);
-	
+
 	/**
+	 * Create a rule to support Spring.
+	 * <p>
+	 * For instance:
+	 * 
+	 * <pre>
+	 * &#064;Rule
+	 * public final SpringRule spring = SpringRule.of(
+	 * 		AutowireCapableBeanFactory.AUTOWIRE_BY_NAME, &quot;classpath:sample.xml&quot;);
+	 * </pre>
+	 * 
 	 * @param autowireMode
+	 *            The autowiring mode (of the test class).
 	 * @param location
+	 *            the first location for the bean context.
 	 * @param nextLocation
-	 * @return
+	 *            optional additional location for the bean context.
+	 * @return the Rule.
+	 * @see org.springframework.beans.factory.config.AutowireCapableBeanFactory#AUTOWIRE_BY_NAME
+	 * @see org.springframework.beans.factory.config.AutowireCapableBeanFactory#AUTOWIRE_BY_TYPE
 	 */
-	static SpringRule of(int autowireMode,String location,String... nextLocation) {
-		String[] tmp = new String[nextLocation.length+1];
-		tmp[0]=location;
+	static SpringRule of(int autowireMode, String location,
+			String... nextLocation) {
+		String[] tmp = new String[nextLocation.length + 1];
+		tmp[0] = location;
 		System.arraycopy(nextLocation, 0, tmp, 1, nextLocation.length);
 		return new SpringRuleImpl(tmp, autowireMode);
 	}
-	
+
 }
