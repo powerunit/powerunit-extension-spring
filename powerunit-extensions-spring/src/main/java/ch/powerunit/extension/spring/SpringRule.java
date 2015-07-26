@@ -33,6 +33,11 @@ import ch.powerunit.rules.TestListenerRule;
  *
  */
 public interface SpringRule extends TestListenerRule {
+	/**
+	 * Get the current application context.
+	 * 
+	 * @return the {@link ApplicationContext}.
+	 */
 	ApplicationContext getApplicationContext();
 
 	/**
